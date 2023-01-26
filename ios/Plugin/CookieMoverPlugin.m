@@ -3,6 +3,8 @@
 
 // Define the plugin using the CAP_PLUGIN Macro, and
 // each method the plugin supports using the CAP_PLUGIN_METHOD macro.
+
 CAP_PLUGIN(CookieMoverPlugin, "CookieMover",
-           CAP_PLUGIN_METHOD(echo, CAPPluginReturnPromise);
+   CAP_PLUGIN_METHOD(syncNsCookiesToWkCookieStore, CAPPluginReturnPromise);
+   CAP_PLUGIN_METHOD(syncWkCookiesToNsCookieStore, CAPPluginReturnPromise);
 )

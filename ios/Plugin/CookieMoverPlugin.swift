@@ -9,10 +9,53 @@ import Capacitor
 public class CookieMoverPlugin: CAPPlugin {
     private let implementation = CookieMover()
 
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
-        call.resolve([
-            "value": implementation.echo(value)
-        ])
+    @objc func syncNsCookiesToWkCookieStore(_ call: CAPPluginCall) {
+        let overwrite = call.getBool("overwrite") ?? false
+
+        print("CookieMoverPlugin - syncNsCookiesToWkCookieStore({ overwrite: \(overwrite) })")
+
+        let callResult = implementation.syncNsCookiesToWkCookieStore(overwrite)
+
+        var result = JSObject()
+
+        var preActionCookies = JSArray()
+        var postActionCookies = JSArray()
+
+        for cookie in callResult.preActionCookies {
+            preActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
+        }
+        for cookie in callResult.postActionCookies {
+            preActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
+        }
+
+        result["preActionCookies"] = preActionCookies
+        result["postActionCookies"] = postActionCookies
+
+        call.resolve(result)
+    }
+
+    @objc func syncWkCookiesToNsCookieStore(_ call: CAPPluginCall) {
+        let overwrite = call.getBool("overwrite") ?? false
+
+        print("CookieMoverPlugin - syncWkCookiesToNsCookieStore({ overwrite: \(overwrite) })")
+
+        let callResult = implementation.syncWkCookiesToNsCookieStore(overwrite)
+
+        var result = JSObject()
+
+        var preActionCookies = JSArray()
+        var postActionCookies = JSArray()
+
+        for cookie in callResult.preActionCookies {
+            preActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
+        }
+        for cookie in callResult.postActionCookies {
+            preActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
+        }
+
+        result["preActionCookies"] = preActionCookies
+        result["postActionCookies"] = postActionCookies
+
+        call.resolve(result)
     }
 }

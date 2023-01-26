@@ -1,3 +1,17 @@
+export interface CookieMoverPluginOptions {
+  readonly overwrite: boolean;
+}
+
+export interface Cookie {
+  readonly name: string;
+}
+
+export interface CookieMoverPluginSyncResult {
+  readonly preActionCookies: Cookie[];
+  readonly postActionCookies: Cookie[];
+}
+
 export interface CookieMoverPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
+  syncWkCookiesToNsCookieStore(options: CookieMoverPluginOptions): Promise<CookieMoverPluginSyncResult>;
+  syncNsCookiesToWkCookieStore(options: CookieMoverPluginOptions): Promise<CookieMoverPluginSyncResult>;
 }

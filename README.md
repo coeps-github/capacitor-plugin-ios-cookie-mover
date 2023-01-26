@@ -13,25 +13,67 @@ npx cap sync
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
+* [`syncWkCookiesToNsCookieStore(...)`](#syncwkcookiestonscookiestore)
+* [`syncNsCookiesToWkCookieStore(...)`](#syncnscookiestowkcookiestore)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-### echo(...)
+### syncWkCookiesToNsCookieStore(...)
 
 ```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
+syncWkCookiesToNsCookieStore(options: CookieMoverPluginOptions) => Promise<CookieMoverPluginSyncResult>
 ```
 
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
+| Param         | Type                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#cookiemoverpluginoptions">CookieMoverPluginOptions</a></code> |
 
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+**Returns:** <code>Promise&lt;<a href="#cookiemoverpluginsyncresult">CookieMoverPluginSyncResult</a>&gt;</code>
 
 --------------------
+
+
+### syncNsCookiesToWkCookieStore(...)
+
+```typescript
+syncNsCookiesToWkCookieStore(options: CookieMoverPluginOptions) => Promise<CookieMoverPluginSyncResult>
+```
+
+| Param         | Type                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#cookiemoverpluginoptions">CookieMoverPluginOptions</a></code> |
+
+**Returns:** <code>Promise&lt;<a href="#cookiemoverpluginsyncresult">CookieMoverPluginSyncResult</a>&gt;</code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### CookieMoverPluginSyncResult
+
+| Prop                    | Type                  |
+| ----------------------- | --------------------- |
+| **`preActionCookies`**  | <code>Cookie[]</code> |
+| **`postActionCookies`** | <code>Cookie[]</code> |
+
+
+#### Cookie
+
+| Prop       | Type                |
+| ---------- | ------------------- |
+| **`name`** | <code>string</code> |
+
+
+#### CookieMoverPluginOptions
+
+| Prop            | Type                 |
+| --------------- | -------------------- |
+| **`overwrite`** | <code>boolean</code> |
 
 </docgen-api>

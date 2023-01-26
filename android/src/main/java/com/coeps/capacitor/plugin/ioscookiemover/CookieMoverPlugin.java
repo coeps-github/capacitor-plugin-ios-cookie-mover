@@ -1,5 +1,7 @@
 package com.coeps.capacitor.plugin.ioscookiemover;
 
+import android.util.Log;
+import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -9,14 +11,37 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 @CapacitorPlugin(name = "CookieMover")
 public class CookieMoverPlugin extends Plugin {
 
-    private CookieMover implementation = new CookieMover();
+    @PluginMethod
+    public void syncNsCookiesToWkCookieStore(PluginCall call) {
+        JSObject options = call.getData();
+
+        Log.d(
+            "CookieMoverPlugin",
+            String.format("syncNsCookiesToWkCookieStore(options: %s) is not implemented in ANDROID plugin!", options)
+        );
+
+        JSObject result = new JSObject();
+        JSArray preActionCookies = new JSArray();
+        JSArray postActionCookies = new JSArray();
+        result.put("preActionCookies", preActionCookies);
+        result.put("postActionCookies", postActionCookies);
+        call.resolve(result);
+    }
 
     @PluginMethod
-    public void echo(PluginCall call) {
-        String value = call.getString("value");
+    public void syncWkCookiesToNsCookieStore(PluginCall call) {
+        JSObject options = call.getData();
 
-        JSObject ret = new JSObject();
-        ret.put("value", implementation.echo(value));
-        call.resolve(ret);
+        Log.d(
+            "CookieMoverPlugin",
+            String.format("syncWkCookiesToNsCookieStore(options: %s) is not implemented in ANDROID plugin!", options)
+        );
+
+        JSObject result = new JSObject();
+        JSArray preActionCookies = new JSArray();
+        JSArray postActionCookies = new JSArray();
+        result.put("preActionCookies", preActionCookies);
+        result.put("postActionCookies", postActionCookies);
+        call.resolve(result);
     }
 }

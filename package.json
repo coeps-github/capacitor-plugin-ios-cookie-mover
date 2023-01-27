@@ -62,7 +62,7 @@
     "typescript": "4.9.4"
   },
   "peerDependencies": {
-    "@capacitor/core": "4.6.2"
+    "@capacitor/core": ">= 3"
   },
   "prettier": "@ionic/prettier-config",
   "swiftlint": "@ionic/swiftlint-config",

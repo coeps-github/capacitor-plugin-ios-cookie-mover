@@ -25,7 +25,7 @@ public class CookieMoverPlugin: CAPPlugin {
             preActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
         }
         for cookie in callResult.postActionCookies {
-            preActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
+            postActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
         }
 
         result["preActionCookies"] = preActionCookies
@@ -50,7 +50,7 @@ public class CookieMoverPlugin: CAPPlugin {
             preActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
         }
         for cookie in callResult.postActionCookies {
-            preActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
+            postActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
         }
 
         result["preActionCookies"] = preActionCookies

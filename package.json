@@ -1,6 +1,6 @@
 {
   "name": "@coeps/capacitor-plugin-ios-cookie-mover",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "This capacitor plugin can move cookies back and forth between NSHTTPCookieStorage and WKHTTPCookieStore to solve some iOS cookie issues.",
   "type": "module",
   "main": "dist/plugin.cjs.js",

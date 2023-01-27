@@ -10,52 +10,80 @@ public class CookieMoverPlugin: CAPPlugin {
     private let implementation = CookieMover()
 
     @objc func syncNsCookiesToWkCookieStore(_ call: CAPPluginCall) {
-        let overwrite = call.getBool("overwrite") ?? false
 
-        print("CookieMoverPlugin - syncNsCookiesToWkCookieStore({ overwrite: \(overwrite) })")
+        DispatchQueue.main.sync {
 
-        let callResult = implementation.syncNsCookiesToWkCookieStore(overwrite)
+            debugPrint("CookieMoverPlugin - syncNsCookiesToWkCookieStore()")
 
-        var result = JSObject()
+            implementation.syncNsCookiesToWkCookieStore({ (callResult) in
 
-        var preActionCookies = JSArray()
-        var postActionCookies = JSArray()
+                let result = self.createJSResult(callResult)
 
-        for cookie in callResult.preActionCookies {
-            preActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
+                let printResult = String(data: try! JSONSerialization.data(withJSONObject: result, options: .prettyPrinted), encoding: .utf8)!
+
+                debugPrint("CookieMoverPlugin - syncNsCookiesToWkCookieStore()\n\(printResult)")
+
+                call.resolve(result)
+
+            })
+
         }
-        for cookie in callResult.postActionCookies {
-            postActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
-        }
 
-        result["preActionCookies"] = preActionCookies
-        result["postActionCookies"] = postActionCookies
-
-        call.resolve(result)
     }
 
     @objc func syncWkCookiesToNsCookieStore(_ call: CAPPluginCall) {
-        let overwrite = call.getBool("overwrite") ?? false
 
-        print("CookieMoverPlugin - syncWkCookiesToNsCookieStore({ overwrite: \(overwrite) })")
+        DispatchQueue.main.sync {
 
-        let callResult = implementation.syncWkCookiesToNsCookieStore(overwrite)
+            debugPrint("CookieMoverPlugin - syncWkCookiesToNsCookieStore()")
 
-        var result = JSObject()
+            implementation.syncWkCookiesToNsCookieStore({ (callResult: Result) in
+
+                let result = self.createJSResult(callResult)
+
+                let printResult = String(data: try! JSONSerialization.data(withJSONObject: result, options: .prettyPrinted), encoding: .utf8)!
+
+                debugPrint("CookieMoverPlugin - syncWkCookiesToNsCookieStore()\n\(printResult)")
+
+                call.resolve(result)
+
+            })
+
+        }
+
+    }
+
+    private func createJSResult(_ result: Result) -> JSObject {
+        var jsResult = JSObject()
 
         var preActionCookies = JSArray()
         var postActionCookies = JSArray()
 
-        for cookie in callResult.preActionCookies {
-            preActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
-        }
-        for cookie in callResult.postActionCookies {
-            postActionCookies.append(JSObject(_immutableCocoaDictionary: cookie))
+        for cookie in result.preActionCookies {
+            let cookieProperties = NSDictionary(dictionary: cookie.properties!)
+            var cookieObj = JSObject()
+
+            for (key, value) in cookieProperties {
+                cookieObj[key as! String] = String(describing: value)
+            }
+
+            preActionCookies.append(cookieObj)
         }
 
-        result["preActionCookies"] = preActionCookies
-        result["postActionCookies"] = postActionCookies
+        for cookie in result.postActionCookies {
+            let cookieProperties = NSDictionary(dictionary: cookie.properties!)
+            var cookieObj = JSObject()
 
-        call.resolve(result)
+            for (key, value) in cookieProperties {
+                cookieObj[key as! String] = String(describing: value)
+            }
+
+            postActionCookies.append(cookieObj)
+        }
+
+        jsResult["preActionCookies"] = preActionCookies
+        jsResult["postActionCookies"] = postActionCookies
+
+        return jsResult
     }
 }

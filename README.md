@@ -72,8 +72,4 @@ syncNsCookiesToWkCookieStore(options: CookieMoverPluginOptions) => Promise<Cooki
 
 #### CookieMoverPluginOptions
 
-| Prop            | Type                 |
-| --------------- | -------------------- |
-| **`overwrite`** | <code>boolean</code> |
-
 </docgen-api>

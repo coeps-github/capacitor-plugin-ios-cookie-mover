@@ -3,39 +3,51 @@ import UIKit
 import WebKit
 
 @objc public class CookieMover: NSObject {
-    @objc public func syncNsCookiesToWkCookieStore(_ overwrite: Bool) -> Result {
-        let result = Result()
-
-        debugPrint("CookieMover - syncWkCookiesToNsCookieStore({ overwrite: \(overwrite) }) -> \(result)")
-
-        return result
-    }
-
-    @objc public func syncWkCookiesToNsCookieStore(_ overwrite: Bool) -> Result {
-        let result = Result()
-
+    @objc public func syncNsCookiesToWkCookieStore(_ callback: @escaping ((Result) -> Void)) {
         let wkCookieStore = WKWebsiteDataStore.default().httpCookieStore
         let nsCookieStore = HTTPCookieStorage.shared
 
-        wkCookieStore.getAllCookies({ (cookies) in
+        wkCookieStore.getAllCookies({ (wkCookies) in
+            let nsCookies = nsCookieStore.cookies!
 
-            for cookie in cookies {
-                let cookieProperties = NSMutableDictionary(dictionary: cookie.properties!)
-                cookieProperties.removeObject(forKey: HTTPCookiePropertyKey.discard) // Remove the discard flag.
-                let newCookie = HTTPCookie(properties: cookieProperties as! [HTTPCookiePropertyKey: Any])!
+            let result = Result()
 
-                if overwrite || !nsCookieStore.cookies!.contains(cookie) {
-                    nsCookieStore.setCookie(newCookie)
-                }
+            for nsCookie in nsCookies {
+                let nsCookieProperties = NSMutableDictionary(dictionary: nsCookie.properties!)
+                nsCookieProperties.removeObject(forKey: HTTPCookiePropertyKey.discard) // Remove the discard flag.
+                let wkCookie = HTTPCookie(properties: nsCookieProperties as! [HTTPCookiePropertyKey: Any])!
+                wkCookieStore.setCookie(wkCookie)
             }
 
-            result.preActionCookies = cookies
-            result.postActionCookies = nsCookieStore.cookies!
+            result.preActionCookies = wkCookies
+            result.postActionCookies = nsCookies
+
+            callback(result)
 
         })
+    }
 
-        debugPrint("CookieMover - syncWkCookiesToNsCookieStore({ overwrite: \(overwrite) }) -> \(result)")
+    @objc public func syncWkCookiesToNsCookieStore(_ callback: @escaping ((Result) -> Void)) {
+        let wkCookieStore = WKWebsiteDataStore.default().httpCookieStore
+        let nsCookieStore = HTTPCookieStorage.shared
 
-        return result
+        wkCookieStore.getAllCookies({ (wkCookies) in
+            let nsCookies = nsCookieStore.cookies!
+
+            let result = Result()
+
+            for wkCookie in wkCookies {
+                let wkCookieProperties = NSMutableDictionary(dictionary: wkCookie.properties!)
+                wkCookieProperties.removeObject(forKey: HTTPCookiePropertyKey.discard) // Remove the discard flag.
+                let nsCookie = HTTPCookie(properties: wkCookieProperties as! [HTTPCookiePropertyKey: Any])!
+                nsCookieStore.setCookie(nsCookie)
+            }
+
+            result.preActionCookies = wkCookies
+            result.postActionCookies = nsCookies
+
+            callback(result)
+
+        })
     }
 }
